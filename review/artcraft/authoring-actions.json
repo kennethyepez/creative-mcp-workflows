@@ -1,0 +1,110 @@
+{
+  "types": {
+    "name": {"type":"string","max":80},
+    "text": {"type":"string","max":360},
+    "color": {"type":"string","max":7,"pattern":"^#[0-9a-fA-F]{6}$"},
+    "cell": {"type":"string","max":4,"pattern":"^[A-Z]{1,2}[1-9][0-9]?$"},
+    "range": {"type":"string","max":9,"pattern":"^[A-Z]{1,2}[1-9][0-9]?(?::[A-Z]{1,2}[1-9][0-9]?)?$"},
+    "coordinate": {"type":"number","min":0,"max":1000},
+    "size": {"type":"number","min":1,"max":1000},
+    "page": {"type":"number","min":1,"max":40},
+    "percent": {"type":"number","min":0,"max":100},
+    "adjustment": {"type":"number","min":-100,"max":100},
+    "exposure": {"type":"number","min":-4,"max":4},
+    "seconds": {"type":"number","min":0,"max":120},
+    "shape": {"type":"enum","values":["rectangle","ellipse"]},
+    "track": {"type":"enum","values":["mono","stereo"]},
+    "video_audio": {"type":"enum","values":["video","audio"]},
+    "rotation": {"type":"enum","values":["90","180","270"]},
+    "table": {"type":"table","max":8,"cell_max":80}
+  },
+  "apps": {
+    "anicraft": {
+      "draw_shape": {"summary":"Draw a filled stage shape", "fields":{"shape":"shape","x":"coordinate","y":"coordinate","width":"size","height":"size","color":"color"}},
+      "add_layer": {"summary":"Add a named timeline layer", "fields":{"name":"name"}},
+      "rename_layer": {"summary":"Rename the active timeline layer", "fields":{"name":"name"}}
+    },
+    "cadcraft": {
+      "draw_line": {"summary":"Draw a line between two points", "fields":{"x1":"coordinate","y1":"coordinate","x2":"coordinate","y2":"coordinate"}},
+      "draw_rectangle": {"summary":"Draw a rectangle between opposite corners", "fields":{"x1":"coordinate","y1":"coordinate","x2":"coordinate","y2":"coordinate"}},
+      "move_entities": {"summary":"Move the drawing geometry by a relative offset", "fields":{"dx":"adjustment","dy":"adjustment"}}
+    },
+    "craft-anything": {
+      "write_brief": {"summary":"Write the brief for your own project", "fields":{"question":"text","purpose":"text"}},
+      "set_plan": {"summary":"Replace the project plan with two named steps", "fields":{"first":"text","second":"text"}},
+      "write_handoff": {"summary":"Write or replace the project handoff note", "fields":{"text":"text"}}
+    },
+    "deckcraft": {
+      "add_slide": {"summary":"Add a slide with a title and body", "fields":{"title":"name","body":"text"}},
+      "add_text_box": {"summary":"Add a text box to the active slide", "fields":{"text":"text","x":"coordinate","y":"coordinate"}},
+      "set_slide_title": {"summary":"Replace the active slide title", "fields":{"title":"name"}}
+    },
+    "designcraft": {
+      "add_page": {"summary":"Insert a blank page into the layout", "fields":{}},
+      "add_text_frame": {"summary":"Create a text frame on the first spread", "fields":{"text":"text","x":"coordinate","y":"coordinate"}},
+      "replace_primary_text": {"summary":"Replace the primary story", "fields":{"text":"text"}}
+    },
+    "effectcraft": {
+      "add_composition": {"summary":"Add a named composition", "fields":{"name":"name","width":"size","height":"size"}},
+      "add_text_layer": {"summary":"Add a text layer to the active composition", "fields":{"text":"text"}},
+      "set_layer_opacity": {"summary":"Change the opacity of the top layer in the active composition", "fields":{"opacity":"percent"}}
+    },
+    "figcraft": {
+      "add_frame": {"summary":"Add a design frame", "fields":{"name":"name","width":"size","height":"size"}},
+      "add_text": {"summary":"Add a text node to the design page", "fields":{"text":"text","x":"coordinate","y":"coordinate"}},
+      "rename_layer": {"summary":"Rename the selected layer", "fields":{"name":"name"}}
+    },
+    "filmcraft": {
+      "add_sequence": {"summary":"Create a timeline sequence", "fields":{"name":"name","width":"size","height":"size"}},
+      "add_track": {"summary":"Add a video or audio track to the active sequence", "fields":{"kind":"video_audio"}},
+      "add_marker": {"summary":"Add a named marker at the playhead of the active sequence", "fields":{"name":"name"}}
+    },
+    "gridcraft": {
+      "set_cell": {"summary":"Set a cell to plain text", "fields":{"cell":"cell","text":"text"}},
+      "write_table": {"summary":"Write rows of plain text into cells starting at an address", "fields":{"start":"cell","rows":"table"}},
+      "style_range": {"summary":"Format a cell range with a fill and bold text", "fields":{"range":"range","color":"color"}}
+    },
+    "lightcraft": {
+      "create_album": {"summary":"Create a named photo album", "fields":{"name":"name"}},
+      "rename_album": {"summary":"Rename an album by its current name", "fields":{"current":"name","name":"name"}},
+      "set_sample_exposure": {"summary":"Adjust the exposure of the sample photo", "fields":{"exposure":"exposure"}}
+    },
+    "materialcraft": {
+      "add_color_node": {"summary":"Add a uniform color node", "fields":{"color":"color"}},
+      "set_node_color": {"summary":"Change the latest uniform color node", "fields":{"color":"color"}},
+      "blend_colors": {"summary":"Create a blend from the two latest color nodes", "fields":{}}
+    },
+    "pdfcraft": {
+      "insert_page": {"summary":"Insert a blank PDF page at a position", "fields":{"page":"page"}},
+      "add_text": {"summary":"Add text at a position on a PDF page", "fields":{"page":"page","text":"text","x":"coordinate","y":"coordinate"}},
+      "rotate_page": {"summary":"Rotate a page clockwise", "fields":{"page":"page","degrees":"rotation"}},
+      "set_title": {"summary":"Set the PDF document title", "fields":{"title":"name"}}
+    },
+    "photocraft": {
+      "create_canvas": {"summary":"Create a colored canvas as the first operation of a new PhotoCraft project", "fields":{"width":"size","height":"size","color":"color"}},
+      "adjust_brightness": {"summary":"Adjust image brightness", "fields":{"amount":"adjustment"}},
+      "adjust_saturation": {"summary":"Adjust image saturation", "fields":{"amount":"adjustment"}},
+      "add_brightness_layer": {"summary":"Add a named, non-destructive brightness adjustment layer", "fields":{"name":"name","amount":"adjustment"}}
+    },
+    "soundcraft": {
+      "add_track": {"summary":"Add a mono or stereo audio track", "fields":{"name":"name","format":"track"}},
+      "rename_track": {"summary":"Rename the latest track", "fields":{"name":"name"}},
+      "add_marker": {"summary":"Add a named timeline marker", "fields":{"name":"name","seconds":"seconds"}}
+    },
+    "texturecraft": {
+      "add_fill": {"summary":"Add a fill layer with a color and roughness", "fields":{"name":"name","color":"color","roughness":"percent"}},
+      "rename_layer": {"summary":"Rename the active layer", "fields":{"name":"name"}},
+      "recolor_fill": {"summary":"Change the base color of the active fill layer", "fields":{"color":"color"}}
+    },
+    "vectorcraft": {
+      "draw_shape": {"summary":"Draw a filled vector shape", "fields":{"shape":"shape","x":"coordinate","y":"coordinate","width":"size","height":"size","color":"color"}},
+      "add_text": {"summary":"Add editable text to the drawing", "fields":{"text":"text","x":"coordinate","y":"coordinate"}},
+      "recolor_shape": {"summary":"Change the fill of the selected shape", "fields":{"color":"color"}}
+    },
+    "wordcraft": {
+      "append_text": {"summary":"Append a paragraph to the document", "fields":{"text":"text"}},
+      "replace_text": {"summary":"Replace the first occurrence of the target text", "fields":{"find":"text","text":"text"}},
+      "insert_table": {"summary":"Insert an editable table at the caret", "fields":{"rows":"table"}}
+    }
+  }
+}

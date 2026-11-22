@@ -1,0 +1,14 @@
+{
+  "name": "creative-mcp-workflows",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "test": "node --test review/artcraft/authoring.test.mjs"
+  },
+  "dependencies": {
+    "zod": "4.6.7"
+  }
+}
