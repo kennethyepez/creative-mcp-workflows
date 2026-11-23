@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { encodeVectorSvg, vectorSvgTool } from './vector-svg.mjs';
 import { appIds, describeOperations, encodeOperations } from './authoring.mjs';
 
 function encode(app, steps) {
@@ -56,4 +57,15 @@ test('GridCraft accepts text and rejects formula-like input', () => {
     const cell = text => [{ name: 'set_cell', args: { cell: 'A1', text } }];
     assert.ok(encode('gridcraft', cell('Studio budget')).value);
     assert.match(encode('gridcraft', cell('=1+1')).error, /plain text/);
+});
+
+test('the SVG write declares its permission and uses the native drawing contract', () => {
+    assert.equal(vectorSvgTool.annotations.readOnlyHint, false);
+    assert.equal(vectorSvgTool.annotations.destructiveHint, true);
+    const args = { shape: 'ellipse', x: 120, y: 100, width: 360, height: 180, color: '#3763c9' };
+    const { value } = encodeVectorSvg(args);
+    assert.deepEqual(JSON.parse(value.slice(1)), [{ name: 'draw_shape', args }]);
+    assert.match(encodeVectorSvg({ ...args, x: 400 }).error, /within/);
+    assert.ok(encodeVectorSvg({ ...args, color: 'blue' }).error);
+    assert.ok(encodeVectorSvg({ ...args, file: 'other.svg' }).error);
 });

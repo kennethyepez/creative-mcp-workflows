@@ -5,6 +5,7 @@ The end-to-end integration was exercised on November 22, 2026 with synthetic inp
 | Check | How it was verified |
 | --- | --- |
 | Blender from Gemini | The user authorized the connector with a passkey. Gemini submitted an approved sample scene for rendering and checked its status. The worker reported completion and a 35,013-byte PNG at 256 × 256. The runtime was independently checked. |
+| Blender GLB from Gemini Task | Gemini invoked the export tool for the approved cube, downloaded the GLB into its task VM, and returned a file attachment. The retrieved file matches the Blender worker’s SHA-256. It is glTF 2.0 with one mesh, 12 triangles and 1,452 bytes. |
 | Blender job isolation | A separate smoke test checked that the input file could not be written, an unrelated canary file was invisible, the container only had loopback networking, and the scene bytes were unchanged after rendering. |
 | ArtCraft native execution | The suite batch ran 17 jobs in 17 separate containers and checked 54 before-and-after native operation steps. Some steps repeated an operation, so the distinct catalog size is 53. |
 | ArtCraft from Gemini | An authorized WordCraft request ran two named operations in order, appending and then replacing text. The same connector later initiated the PDF edit described below. |
@@ -12,6 +13,16 @@ The end-to-end integration was exercised on November 22, 2026 with synthetic inp
 | Authorization regressions | Automated checks covered invalid WebAuthn signatures, challenge replay, unexpected origins, OAuth resource scoping, and access to file bytes through a human session. |
 
 The [published Blender PNG](../evidence/samples/blender-sample-render.png) comes from a separate local replay of the approved cube fixture with the same native task. The replay used a networkless container and a read-only input mount, and the resulting PNG decoded at 256 × 256 pixels.
+
+## Verify the GLB sample
+
+[Download the original GLB](../evidence/samples/blender-sample-cube.glb?raw=1) or verify the committed file from the repository root.
+
+```bash
+python review/verify_glb.py
+```
+
+The export contains static triangle geometry from the evaluated Blender scene. The current integration supports approved scene inputs and exports up to 512 KiB.
 
 ## ArtCraft native coverage
 
@@ -36,6 +47,8 @@ The suite ran one ordered workflow per app. These are the steps recorded as veri
 | TextureCraft | Add a fill, rename the layer, recolor the fill |
 | VectorCraft | Draw and recolor a shape, add text |
 | WordCraft | Append and replace text, insert a table |
+
+The updated ArtCraft gateway declares explicit read and write annotations and returns protected artifact descriptors for completed file jobs. The new SVG creation tool passed schema and queue tests. Its latest Gemini Task SVG and PNG acceptance is pending because Gemini retained the previous catalog and rejected the tool call for authorization. The earlier native and PDF acceptance above remain the evidence for those workflows.
 
 ## Review the PDF
 
